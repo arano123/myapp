@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MyApp</title>
+</head>
+<body>
+  <h1>新增資料</h1>
+  <input id="name" placeholder="名稱">
+  <input id="category" placeholder="分類">
+  <button onclick="addItem()">送出</button>
+
+  <h1>搜尋資料</h1>
+  <input id="searchCategory" placeholder="輸入分類">
+  <button onclick="searchItems()">搜尋</button>
+  <ul id="result"></ul>
+
+  <script>
+    async function addItem() {
+      let name = document.getElementById("name").value;
+      let category = document.getElementById("category").value;
+      await fetch("/add", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name, category})
+      });
+      alert("已新增");
+    }
+
+    async function searchItems() {
+      let category = document.getElementById("searchCategory").value;
+      let res = await fetch(`/search?category=${category}`);
+      let data = await res.json();
+      let list = document.getElementById("result");
+      list.innerHTML = "";
+      data.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item[1]} (${item[2]})`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
