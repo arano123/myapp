@@ -14,7 +14,7 @@ def get_db_connection():
         host=os.getenv("DB_HOST", "dpg-d2i8ijemcj7s73e3s8dg-a.oregon-postgres.render.com"),
         database=os.getenv("DB_NAME", "ms_data"),
         user=os.getenv("DB_USER", "ms_data_user"),
-        password=os.getenv("DB_PASS", "sRpjfAi4YGkIy2PVP8IUSXOnYXORTH2")
+        password=os.getenv("DB_PASS", "CsRpjfAi4YGkIy2PVP8IUSXOnYXORTH2")
     )
     return conn
 
