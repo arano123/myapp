@@ -11,10 +11,10 @@ def home():
 # 連接資料庫（用環境變數）
 def get_db_connection():
     conn = psycopg2.connect(
-        host=os.getenv("dpg-d2i8ijemcj7s73e3s8dg-a.oregon-postgres.render.com"),
-        database=os.getenv("ms_data"),
-        user=os.getenv("ms_data_user"),
-        password=os.getenv("CsRpjfAi4YGkIy2PVP8IUSXOnYXORTH2")
+        host=os.getenv("DB_HOST"),
+        database=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASS")
     )
     return conn
 
@@ -44,6 +44,17 @@ def search_items():
     conn.close()
 
     return jsonify(rows)
+
+@app.route('/all', methods=['GET'])
+def get_all_items():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, category FROM items")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return jsonify(rows)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

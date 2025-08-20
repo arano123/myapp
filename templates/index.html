@@ -12,24 +12,35 @@
   <h1>搜尋資料</h1>
   <input id="searchCategory" placeholder="輸入分類">
   <button onclick="searchItems()">搜尋</button>
+
+  <h2>搜尋結果</h2>
   <ul id="result"></ul>
+
+  <h2>所有資料</h2>
+  <ul id="allItems"></ul>
 
   <script>
     async function addItem() {
       let name = document.getElementById("name").value;
       let category = document.getElementById("category").value;
+
       await fetch("/add", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name, category})
       });
+
       alert("已新增");
+
+      // 自動刷新所有資料
+      getAllItems();
     }
 
     async function searchItems() {
       let category = document.getElementById("searchCategory").value;
       let res = await fetch(`/search?category=${category}`);
       let data = await res.json();
+
       let list = document.getElementById("result");
       list.innerHTML = "";
       data.forEach(item => {
@@ -37,7 +48,25 @@
         li.textContent = `${item[1]} (${item[2]})`;
         list.appendChild(li);
       });
+
+      // 搜尋後自動刷新所有資料
+      getAllItems();
     }
+
+    async function getAllItems() {
+      let res = await fetch("/all");
+      let data = await res.json();
+      let list = document.getElementById("allItems");
+      list.innerHTML = "";
+      data.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item[1]} (${item[2]})`;
+        list.appendChild(li);
+      });
+    }
+
+    // 頁面載入時就先載入全部資料
+    window.onload = getAllItems;
   </script>
 </body>
 </html>
